@@ -11,6 +11,11 @@ public class PlayerMovement : MonoBehaviour
   public float groundRadius = 0.2f;
   public LayerMask groundLayer;         // Layer "Ground"
 
+  [Header("Attack Settings")]
+  public Transform attackPoint;
+  public float attackRange = 0.5f;
+  public LayerMask enemyLayers;
+
   private Rigidbody2D rb;
   private SpriteRenderer sr;
   private Animator anim;
@@ -25,6 +30,28 @@ public class PlayerMovement : MonoBehaviour
 
   void Update()
   {
+    if(Input.GetMouseButtonDown(0))
+    {
+      anim.SetTrigger("attack");
+      Debug.Log("Ataque acionado");
+      Collider2D[] hitEnemies = Physics2D.OverlapCircleAll(attackPoint.position, attackRange, enemyLayers);
+      Debug.Log($"Inimigos atingidos: {hitEnemies.Length}");
+      foreach(Collider2D enemy in hitEnemies)
+      {
+        Debug.Log("Inimigo atingido: " + enemy.name);
+        EnemyIA enemyIA = enemy.GetComponent<EnemyIA>();
+        if(enemyIA != null)
+        {
+          Debug.Log("Chamando Death no inimigo: ");
+          enemyIA.Death();
+        }
+        else{
+          Debug.LogError("EnemyIA não encontrado no inimigo atingido.");
+        }
+      }
+    }
+    
+
     // Movimento horizontal
     float move = Input.GetAxis("Horizontal");
     rb.linearVelocity = new Vector2(move * speed, rb.linearVelocity.y);
@@ -51,11 +78,11 @@ public class PlayerMovement : MonoBehaviour
     if ((Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.Space)) && isGrounded)
     {
       rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
-      Debug.Log($"⬆️ PULO!  | Grounded: {isGrounded} | VelocityY: {rb.linearVelocity.y}");
+      //Debug.Log($"⬆️ PULO!  | Grounded: {isGrounded} | VelocityY: {rb.linearVelocity.y}");
     }
 
     // Debug contínuo (a cada frame)
-    Debug.Log($"Frame {Time.frameCount} | Grounded: {isGrounded} | isJumping(anim): {anim.GetBool("isJumping")}");
+    //Debug.Log($"Frame {Time.frameCount} | Grounded: {isGrounded} | isJumping(anim): {anim.GetBool("isJumping")}");
   }
 
   private void OnDrawGizmosSelected()
