@@ -238,7 +238,11 @@ MonoBehaviour:
   speed: 2
   raioDeteccao: 5
   distanciaParaAtacar: 1.5
-  attackCooldown: 1.5
+  attackCooldown: 3
+  damage: 1
+  lootTable:
+  - itemPrefab: {fileID: 2517027098149736591, guid: 46125a764a8dc8a46ada0667616e3412, type: 3}
+    dropChance: 100
 --- !u!114 &833053715730182664
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -251,9 +255,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 80dcaaf967e739242b1ef3e7ca52c2c9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::EnemyMovement
-  velocidade: 2
+  velocidade: 1
   sensorBorda: {fileID: 6940053706090713827}
   distanciaSensor: 0.5
   groundlayer:
     serializedVersion: 2
     m_Bits: 8
+  damage: 1

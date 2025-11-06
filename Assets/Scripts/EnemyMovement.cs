@@ -16,6 +16,7 @@ public class EnemyMovement : MonoBehaviour
 
     private bool walking = false;
     private float posSensorBordaInicialX;
+    public int damage = 1;
 
     void Start()
     {

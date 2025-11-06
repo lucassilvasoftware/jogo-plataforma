@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1347925296655660020}
   - component: {fileID: 1765237874835806075}
   - component: {fileID: 3310213067522611366}
+  - component: {fileID: 1749633159752266031}
   m_Layer: 0
   m_Name: Player 1
   m_TagString: Player
@@ -131,7 +132,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   attackPoint: {fileID: 6267710955078572474}
-  attackRange: 0.5
+  attackRange: 1
   enemyLayers:
     serializedVersion: 2
     m_Bits: 256
@@ -215,6 +216,20 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &1749633159752266031
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3051333228571198875}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e479f62577b23f42a303ee9d7c05c5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  maxHealth: 3
+  HealthUI: {fileID: 0}
 --- !u!1 &5153634045161830879
 GameObject:
   m_ObjectHideFlags: 0

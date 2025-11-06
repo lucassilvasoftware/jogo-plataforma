@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class EnemyIA : MonoBehaviour
 {
@@ -13,6 +14,12 @@ public class EnemyIA : MonoBehaviour
     public float attackCooldown = 1.15f;
     private float nextAttackTime = 0f;
     private bool isDead = false;
+    private Rigidbody2D rb;
+    public int damage = 1;
+
+    //LootTable
+    [Header("Loot")]
+    public List<LootItem> lootTable = new List<LootItem>();
     
     void Start()
     {
@@ -47,8 +54,13 @@ public class EnemyIA : MonoBehaviour
                     Debug.LogError("ordem attack agora");
                     enemyMovement.StopMovement();
                     enemyMovement.TriggerAttack();
-
                     nextAttackTime = Time.time + attackCooldown;
+
+                    PlayerHealth playerHealth = player.GetComponent<PlayerHealth>();
+                    if (playerHealth != null)
+                    {
+                        playerHealth.TakeDamage(damage);
+                    }
                 }
                 else
                 {
@@ -58,7 +70,6 @@ public class EnemyIA : MonoBehaviour
             else
             {
                 nextAttackTime = Time.time;
-
                 float direcaoX = Mathf.Sign(player.position.x - transform.position.x);
                 enemyMovement.Movement(direcaoX);
             }
@@ -72,20 +83,50 @@ public class EnemyIA : MonoBehaviour
 
     public void Death()
     {
+
         if (isDead) return;
         isDead = true;
 
+        //Go around loottable
+        //Spawn Item
+        foreach (LootItem lootItem in lootTable)
+        {
+            if (Random.Range(0f, 100f) <= lootItem.dropChance)
+            {
+                InstantiateLoot(lootItem.itemPrefab);
+            }
+            break;
+        }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.AddScore("Enemy");
+        }
+        
         enemyMovement.TriggerDeath();
-        GameManager.AddScore("Enemy");
 
         this.enabled = false;
-        GetComponent<Collider2D>().enabled = false;
+        enemyMovement.enabled = false;
 
-        Rigidbody2D rb = GetComponent<Rigidbody2D>();
-        rb.isKinematic = true;
-        rb.linearVelocity = Vector2.zero;
+        if (rb != null)
+        {
+            //rb.isKinematic = false;
+            rb.bodyType = RigidbodyType2D.Dynamic;
+
+            rb.linearVelocity = new Vector2(0, rb.linearVelocity.y);
+        }
 
         Destroy(gameObject, 2f);
+    }
+
+    void InstantiateLoot(GameObject loot)
+    {
+        if (loot)
+        {
+            GameObject droppedLoot = Instantiate(loot, transform.position, Quaternion.identity);
+
+            droppedLoot.GetComponent<SpriteRenderer>().color = Color.red;
+        }
     }
 
     

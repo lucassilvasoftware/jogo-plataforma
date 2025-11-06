@@ -20,12 +20,22 @@ public class PlayerMovement : MonoBehaviour
   private SpriteRenderer sr;
   private Animator anim;
   private bool isGrounded;
+  private float posAttackPointInicialX;
 
   void Start()
   {
     rb = GetComponent<Rigidbody2D>();
     sr = GetComponent<SpriteRenderer>();
     anim = GetComponent<Animator>();
+
+    if (attackPoint == null)
+    {
+      Debug.LogError("Erro: attackPoint não atribuído.");
+    }
+    else
+    {
+      posAttackPointInicialX = Mathf.Abs(attackPoint.localPosition.x);
+    }
   }
 
   void Update()
@@ -57,8 +67,16 @@ public class PlayerMovement : MonoBehaviour
     rb.linearVelocity = new Vector2(move * speed, rb.linearVelocity.y);
 
     // Vira sprite
-    if (move > 0) sr.flipX = false;
-    else if (move < 0) sr.flipX = true;
+    if (move > 0)
+    {
+      sr.flipX = false;
+      attackPoint.localPosition = new Vector3(posAttackPointInicialX, attackPoint.localPosition.y, attackPoint.localPosition.z);
+    }
+    else if (move < 0)
+    {
+      sr.flipX = true;
+      attackPoint.localPosition = new Vector3(-posAttackPointInicialX, attackPoint.localPosition.y, attackPoint.localPosition.z);
+    }
 
     // Atualiza animação de movimento
     anim.SetFloat("Speed", Mathf.Abs(move));
